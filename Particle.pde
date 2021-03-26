@@ -42,7 +42,7 @@ public class Particle
   
   private void drawParticle()
   {
-    int size = 2;
+    int size = particleSize;
     for (int x = (int)position.x - size; x <= (int)position.x + size; x++)
     {
       for (int y = (int)position.y - size; y <= (int)position.y + size; y++)
@@ -50,15 +50,5 @@ public class Particle
         pixels[(int)clampY(y) * height + (int)clampX(x)] += col;
       }
     }
-  }
-  
-  private float clampX(float x)
-  {
-    return (x + width) % width;
-  }
-  
-  private float clampY(float y)
-  {
-    return (y + height) % height;
   }
 }

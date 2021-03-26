@@ -30,6 +30,13 @@ color vectorColor = color(255, 0, 0);
 
 int alphaBackground = 5;
 
+float distortionFactor = 10;
+
+float particleMaxAcceleration = 50;
+float particleMinAcceleration = 30;
+
+int particleSize = 3;
+
 void setup()
 {
   size(1024,1024);
@@ -68,7 +75,7 @@ void initValues()
   
   particles = new Particle[particleAmount];
   for(int i = 0; i < particleAmount; i++)
-    particles[i] = new Particle(random(10, 30), color(255, 32));
+    particles[i] = new Particle(random(particleMinAcceleration, particleMaxAcceleration), color(255, 32));
 }
 
 void updateOffset()
@@ -86,7 +93,7 @@ void initParticleVectorField()
   {
     for(int y = 0; y < vectorFieldHeight; y++)
     {
-      float angle = PI * 4 * noise((float)x / vectorFieldWidth * xScale + xOffset, (float)y / vectorFieldHeight * yScale + yOffset, zOffset);
+      float angle = PI * distortionFactor * noise((float)x / vectorFieldWidth * xScale + xOffset, (float)y / vectorFieldHeight * yScale + yOffset, zOffset);
       vectorField[x][y] = PVector.fromAngle(angle);
     }
   }
@@ -153,6 +160,8 @@ PVector pixelToGrid(PVector pixel)
 PVector pixelToVectorField(int x, int y)
 {
   PVector index = pixelToGrid(x, y);
+  index.x = clampX(index.x);
+  index.y = clampY(index.y);
   return vectorField[(int)index.x][(int)index.y];
 }
 
@@ -169,3 +178,15 @@ color grayToColor(float val)
   val *= 255;
   return color((val + colorShift) % 255, 255, 255);
 }
+
+
+  
+  float clampX(float x)
+  {
+    return (x + width) % width;
+  }
+  
+  float clampY(float y)
+  {
+    return (y + height) % height;
+  }
